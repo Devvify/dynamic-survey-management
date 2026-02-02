@@ -1,5 +1,7 @@
 import "./globals.css";
 import type { ReactNode } from "react";
+import { GlobalHeader } from "@/components/GlobalHeader";
+import { QueryProvider } from "@/lib/providers/QueryProvider";
 
 export const metadata = {
   title: "Survey Frontend",
@@ -8,8 +10,13 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
-      <body className="min-h-screen">{children}</body>
+    <html lang="en" suppressHydrationWarning>
+      <body className="min-h-screen" suppressHydrationWarning>
+        <QueryProvider>
+          <GlobalHeader />
+          {children}
+        </QueryProvider>
+      </body>
     </html>
   );
 }
