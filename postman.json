@@ -1,0 +1,256 @@
+{
+  "info": {
+    "name": "Dynamic Survey Management API (Laravel + Sanctum + Spatie)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000/api" },
+    { "key": "admin_token", "value": "" },
+    { "key": "officer_token", "value": "" },
+    { "key": "survey_id", "value": "" },
+    { "key": "submission_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Admin Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login success', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "pm.environment.set('admin_token', json.token || '');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Officer Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{base_url}}/auth/login",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"officer@example.com\",\n  \"password\": \"password\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Login success', function () { pm.response.to.have.status(200); });",
+                  "var json = pm.response.json();",
+                  "pm.environment.set('officer_token', json.token || '');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auth Me (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/auth/me"
+          }
+        },
+        {
+          "name": "Auth Me (Officer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{officer_token}}" }],
+            "url": "{{base_url}}/auth/me"
+          }
+        },
+        {
+          "name": "Logout (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/auth/logout"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "List Surveys (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/admin/surveys?per_page=10"
+          }
+        },
+        {
+          "name": "Create Survey (All-in-one)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/admin/surveys",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Employee Feedback Survey\",\n  \"description\": \"Monthly feedback collection\",\n  \"status\": \"active\",\n  \"fields\": [\n    {\n      \"key\": \"employee_name\",\n      \"label\": \"Employee Name\",\n      \"type\": \"text\",\n      \"is_required\": true,\n      \"order\": 1\n    },\n    {\n      \"key\": \"work_mode\",\n      \"label\": \"Work Mode\",\n      \"type\": \"radio\",\n      \"is_required\": true,\n      \"order\": 2,\n      \"options\": [\n        { \"label\": \"Remote\", \"value\": \"remote\", \"order\": 1 },\n        { \"label\": \"Office\", \"value\": \"office\", \"order\": 2 },\n        { \"label\": \"Hybrid\", \"value\": \"hybrid\", \"order\": 3 }\n      ]\n    },\n    {\n      \"key\": \"job_satisfaction\",\n      \"label\": \"Job Satisfaction\",\n      \"type\": \"select\",\n      \"is_required\": true,\n      \"order\": 3,\n      \"options\": [\n        { \"label\": \"Satisfied\", \"value\": \"satisfied\", \"order\": 1 },\n        { \"label\": \"Neutral\", \"value\": \"neutral\", \"order\": 2 },\n        { \"label\": \"Unsatisfied\", \"value\": \"unsatisfied\", \"order\": 3 }\n      ]\n    },\n    {\n      \"key\": \"benefits\",\n      \"label\": \"Which benefits do you use?\",\n      \"type\": \"checkbox\",\n      \"is_required\": false,\n      \"order\": 4,\n      \"options\": [\n        { \"label\": \"Health\", \"value\": \"health\", \"order\": 1 },\n        { \"label\": \"Transport\", \"value\": \"transport\", \"order\": 2 },\n        { \"label\": \"Food\", \"value\": \"food\", \"order\": 3 }\n      ]\n    }\n  ]\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Created', function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "pm.environment.set('survey_id', (json.data && json.data.id) ? json.data.id : '');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Survey (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/admin/surveys/{{survey_id}}"
+          }
+        },
+        {
+          "name": "List Submissions for Survey (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/admin/surveys/{{survey_id}}/submissions?per_page=10"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var json = pm.response.json();",
+                  "// if your endpoint returns a paginator JSON, try to capture the first submission id",
+                  "if (json && json.data && json.data.length > 0) {",
+                  "  pm.environment.set('submission_id', json.data[0].id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Submission Details (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/admin/submissions/{{submission_id}}"
+          }
+        },
+        {
+          "name": "Delete Survey (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": "{{base_url}}/admin/surveys/{{survey_id}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Officer",
+      "item": [
+        {
+          "name": "List Active Surveys (Officer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{officer_token}}" }],
+            "url": "{{base_url}}/officer/surveys?per_page=10"
+          }
+        },
+        {
+          "name": "Get Survey Schema (Officer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{officer_token}}" }],
+            "url": "{{base_url}}/officer/surveys/{{survey_id}}"
+          }
+        },
+        {
+          "name": "Submit Survey (Officer)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{officer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/officer/surveys/{{survey_id}}/submit",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": {\n    \"employee_name\": \"John Doe\",\n    \"work_mode\": \"remote\",\n    \"job_satisfaction\": \"satisfied\",\n    \"benefits\": [\"health\", \"food\"]\n  }\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Submitted', function () { pm.response.to.have.status(201); });",
+                  "var json = pm.response.json();",
+                  "pm.environment.set('submission_id', json.submission_id || '');"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Submit Survey (Officer) - Invalid Option (Should 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{officer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/officer/surveys/{{survey_id}}/submit",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": {\n    \"employee_name\": \"Jane Doe\",\n    \"work_mode\": \"mars\",\n    \"job_satisfaction\": \"satisfied\",\n    \"benefits\": [\"health\"]\n  }\n}"
+            }
+          }
+        },
+        {
+          "name": "Submit Survey (Officer) - Missing Required (Should 422)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{officer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": "{{base_url}}/officer/surveys/{{survey_id}}/submit",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"answers\": {\n    \"work_mode\": \"remote\"\n  }\n}"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
