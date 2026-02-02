@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Survey Frontend Application
 
-## Getting Started
+Modern, responsive web application built with Next.js 14 and TypeScript for the Dynamic Survey Management System. Provides intuitive interfaces for administrators to manage surveys and officers to submit responses.
 
-First, run the development server:
+## 📋 Table of Contents
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Project Structure](#project-structure)
+- [Development](#development)
+- [API Integration](#api-integration)
+- [Deployment](#deployment)
+
+## ✨ Features
+
+### Administrator Dashboard
+- **Survey Management**: Create, edit, and delete surveys
+- **Field Builder**: Visual interface for adding various field types
+- **Submission Viewer**: Real-time submission tracking
+- **Status Control**: Manage survey lifecycle (draft/active)
+- **Responsive Design**: Optimized for all screen sizes
+
+### Officer Portal
+- **Survey Discovery**: Browse available active surveys
+- **Form Filling**: Intuitive form interface with validation
+- **Progress Tracking**: Visual indicators for completion
+
+### Technical Features
+- **Server-Side Rendering**: Fast initial page loads with Next.js
+- **Type Safety**: Full TypeScript implementation
+- **Form Validation**: Client-side validation with Formik and Yup
+- **Data Fetching**: Efficient caching with React Query
+- **Authentication**: Secure cookie-based auth with role management
+- **UI Components**: Beautiful, accessible components from Radix UI
+
+## 🛠️ Tech Stack
+
+- **Framework**: Next.js 14.2.35 (React 18)
+- **Language**: TypeScript 5
+- **Styling**: Tailwind CSS 3.4
+- **Forms**: Formik + Yup validation
+- **Data Fetching**: TanStack React Query
+- **UI Components**: Radix UI (via shadcn/ui)
+- **Icons**: Lucide React
+- **HTTP Client**: Native Fetch API
+
+## 🚀 Installation
+
+### Prerequisites
+
+- Node.js 18.x or higher
+- npm 9.x or yarn 1.22+
+- Running backend API
+
+### Setup Steps
+
+1. **Navigate to frontend directory**
+   ```bash
+   cd survey-frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Environment configuration**
+   ```bash
+   cp .env.example .env.local
+   ```
+
+4. **Configure environment variables**
+   Edit `.env.local`:
+   ```env
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+   ```
+
+5. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+The application will be available at `http://localhost:3000`
+
+## 📁 Project Structure
+
+```
+survey-frontend/
+├── src/
+│   ├── app/                    # Next.js App Router
+│   │   ├── (auth)/            # Auth routes
+│   │   ├── (officer)/         # Officer routes
+│   │   ├── admin/             # Admin routes
+│   │   └── api/               # API handlers
+│   ├── components/            # React components
+│   │   └── ui/               # UI primitives
+│   └── lib/                   # Utilities
+│       ├── api/              # API client
+│       ├── auth/             # Authentication
+│       ├── hooks/            # Custom hooks
+│       └── constants/        # App constants
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 💻 Development
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev        # Development server
+npm run build      # Production build
+npm start          # Start production server
+npm run lint       # Run ESLint
+```
 
-## Learn More
+## 📡 API Integration
 
-To learn more about Next.js, take a look at the following resources:
+### API Client
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```typescript
+// Type-safe API calls
+const { data, isLoading } = useOfficerSurveys({
+  page: 1,
+  per_page: 10,
+});
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📦 Deployment
 
-## Deploy on Vercel
+### Production Build
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+npm run build
+npm start
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Environment Variables
+
+```env
+NEXT_PUBLIC_API_BASE_URL=https://api.yourdomain.com/api
+```
+
+### Deployment Options
+
+- **Vercel** (Recommended): `vercel --prod`
+- **Docker**: Use provided Dockerfile
+- **Traditional Server**: Build and run with PM2
+
+## 🐛 Troubleshooting
+
+**API Connection Error**
+- Verify `NEXT_PUBLIC_API_BASE_URL` in `.env.local`
+- Check backend server is running
+
+**Build Errors**
+```bash
+rm -rf .next node_modules
+npm install
+npm run build
+```
+
+---
+
+Built with Next.js 14 | Maintained by Devvify Team

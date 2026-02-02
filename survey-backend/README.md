@@ -1,59 +1,306 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Survey Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 11 REST API backend for the Dynamic Survey Management System. Provides secure endpoints for survey creation, submission handling, and user management with role-based access control.
 
-## About Laravel
+## 📋 Table of Contents
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Database](#database)
+- [API Documentation](#api-documentation)
+- [Authentication](#authentication)
+- [Deployment](#deployment)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## ✨ Features
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **RESTful API**: Clean, organized API endpoints following REST principles
+- **Authentication**: Secure token-based authentication using Laravel Sanctum
+- **Role Management**: Admin and Officer roles with Spatie Permission package
+- **Survey CRUD**: Complete survey lifecycle management
+- **Dynamic Fields**: Support for multiple field types with custom validation
+- **Submission Handling**: Efficient survey response storage and retrieval
+- **Data Validation**: Server-side validation for all inputs
+- **CORS Support**: Configured for frontend integration
+- **Database Migrations**: Version-controlled schema management
+- **Seeders**: Sample data for development and testing
 
-## Learning Laravel
+## 🛠️ Tech Stack
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+- **Framework**: Laravel 11.x
+- **PHP Version**: 8.2+
+- **Database**: MySQL 8.0+ / MariaDB 10.5+
+- **Authentication**: Laravel Sanctum
+- **Permissions**: Spatie Laravel Permission
+- **API Resources**: Laravel API Resources for data transformation
+- **Validation**: Form Request classes
+- **Testing**: PHPUnit
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🚀 Installation
 
-## Laravel Sponsors
+### Prerequisites
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+- PHP 8.2 or higher
+- Composer 2.x
+- MySQL 8.0+
+- Git
 
-### Premium Partners
+### Setup Steps
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+1. **Navigate to backend directory**
+   ```bash
+   cd survey-backend
+   ```
 
-## Contributing
+2. **Install dependencies**
+   ```bash
+   composer install
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+3. **Environment configuration**
+   ```bash
+   cp .env.example .env
+   ```
 
-## Code of Conduct
+4. **Generate application key**
+   ```bash
+   php artisan key:generate
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+5. **Configure database**
+   Edit `.env` file:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=survey_db
+   DB_USERNAME=root
+   DB_PASSWORD=your_password
+   ```
 
-## Security Vulnerabilities
+6. **Run migrations and seeders**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+7. **Start development server**
+   ```bash
+   php artisan serve
+   ```
 
-## License
+The API will be available at `http://localhost:8000`
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## ⚙️ Configuration
+
+### Environment Variables
+
+```env
+# Application
+APP_NAME="Survey Management API"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost:8000
+
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
+
+# Database
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=survey_db
+DB_USERNAME=root
+DB_PASSWORD=
+
+# Sanctum
+SANCTUM_STATEFUL_DOMAINS=localhost:3000
+SESSION_DOMAIN=localhost
+```
+
+### CORS Configuration
+
+CORS is configured in `config/cors.php` to allow requests from the frontend application.
+
+## 🗄️ Database
+
+### Schema Overview
+
+**Users Table**
+- id, name, email, password
+- Manages admin and officer accounts
+
+**Roles & Permissions**
+- Managed by Spatie Permission package
+- Roles: admin, officer
+
+**Surveys Table**
+- id, title, description, status, created_by
+- Survey metadata and status tracking
+
+**Survey Fields Table**
+- id, survey_id, key, label, type, is_required, order
+- Dynamic field definitions
+
+**Survey Field Options Table**
+- id, field_id, label, value, order
+- Options for select, radio, and checkbox fields
+
+**Survey Submissions Table**
+- id, survey_id, submitted_by, created_at
+- Submission records
+
+**Submission Answers Table**
+- id, submission_id, field_id, value_text, value_json
+- Individual field responses
+
+### Running Migrations
+
+```bash
+# Run all migrations
+php artisan migrate
+
+# Rollback last batch
+php artisan migrate:rollback
+
+# Fresh migration with seeding
+php artisan migrate:fresh --seed
+
+# Check migration status
+php artisan migrate:status
+```
+
+## 📡 API Documentation
+
+### Base URL
+```
+http://localhost:8000/api
+```
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description | Auth |
+|--------|----------|-------------|------|
+| POST | `/auth/login` | User login | No |
+| POST | `/auth/logout` | User logout | Yes |
+| GET | `/auth/me` | Get current user | Yes |
+
+### Admin Survey Endpoints
+
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/admin/surveys` | List all surveys | Admin |
+| POST | `/admin/surveys` | Create survey | Admin |
+| GET | `/admin/surveys/{id}` | Get survey details | Admin |
+| PUT | `/admin/surveys/{id}` | Update survey | Admin |
+| DELETE | `/admin/surveys/{id}` | Delete survey | Admin |
+| GET | `/admin/surveys/{id}/submissions` | Get submissions | Admin |
+
+### Officer Survey Endpoints
+
+| Method | Endpoint | Description | Role |
+|--------|----------|-------------|------|
+| GET | `/officer/surveys` | List active surveys | Officer |
+| GET | `/officer/surveys/{id}` | Get survey details | Officer |
+| POST | `/officer/surveys/{id}/submit` | Submit survey response | Officer |
+
+### Request/Response Examples
+
+**Login Request**
+```json
+POST /api/auth/login
+{
+  "email": "admin@example.com",
+  "password": "password"
+}
+```
+
+**Login Response**
+```json
+{
+  "token": "1|abc123...",
+  "user": {
+    "id": 1,
+    "name": "Admin User",
+    "email": "admin@example.com",
+    "roles": ["admin"]
+  }
+}
+```
+
+**Create Survey Request**
+```json
+POST /api/admin/surveys
+{
+  "title": "Employee Feedback Survey",
+  "description": "Annual feedback form",
+  "status": "active",
+  "fields": [
+    {
+      "key": "employee_name",
+      "label": "Your Name",
+      "type": "text",
+      "is_required": true,
+      "order": 1
+    }
+  ]
+}
+```
+
+## 🔐 Authentication
+
+### Sanctum Token Authentication
+
+1. **Login** to receive a bearer token
+2. **Include token** in all subsequent requests:
+   ```
+   Authorization: Bearer {token}
+   ```
+
+3. **Logout** to revoke the token
+
+### Middleware Protection
+
+Routes are protected using:
+- `auth:sanctum` - Requires valid token
+- `role:admin` - Requires admin role
+- `role:officer` - Requires officer role
+
+## 📦 Deployment
+
+### Production Checklist
+
+1. **Environment Setup**
+   ```bash
+   APP_ENV=production
+   APP_DEBUG=false
+   ```
+
+2. **Optimize Application**
+   ```bash
+   composer install --optimize-autoloader --no-dev
+   php artisan config:cache
+   php artisan route:cache
+   php artisan view:cache
+   ```
+
+3. **Database**
+   ```bash
+   php artisan migrate --force
+   ```
+
+4. **Permissions**
+   ```bash
+   chmod -R 755 storage bootstrap/cache
+   ```
+
+### Server Requirements
+
+- PHP >= 8.2
+- MySQL >= 8.0
+- Composer
+- Required PHP extensions: OpenSSL, PDO, Mbstring, Tokenizer, XML, Ctype, JSON, BCMath
+
+---
+
+Built with Laravel 11 | Maintained by Devvify Team
